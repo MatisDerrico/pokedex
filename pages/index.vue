@@ -46,7 +46,7 @@ showDescription.value = false;
 
 const calculerPourcentage = (valeurActuelle, valeurMaximale) => {
     console.log( (valeurActuelle / valeurMaximale) * 100);
-    return Math.round((valeurActuelle / valeurMaximale) * 100);
+    return ((valeurActuelle / valeurMaximale) * 100);
   }
 
 const appelDescription = () => {
@@ -255,7 +255,7 @@ const selectType = (type) => {
             <p class="text-justify text-red-950">description: {{ attaque.description }}</p>
             <p class="text-justify text-red-950">Degâts: {{ attaque.degats }}</p>
             <div class="mb-5 h-1 bg-gray-200">
-              <div class="h-1 bg-purple-500" :style="`width:${calculerPourcentage(attaque.degats, 300)}`"></div>
+              <div class="h-1 bg-purple-500" :style="`width:${calculerPourcentage(attaque.degats, 300)}%`"></div>
             </div>
             <p class="text-justify text-red-950">Type de l'attaque: {{ attaque.typeDePokemon.nom }}</p>
            
