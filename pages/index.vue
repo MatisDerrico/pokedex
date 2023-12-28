@@ -41,7 +41,18 @@ console.log(data.value);
 pokemons.value = data.value.pokemons;
 typesDePokemon.value = data.value.typesDePokemon
 const detailPokemon = ref();
+const showDescription =ref();
+showDescription.value = false;
 
+const calculerPourcentage = (valeurActuelle, valeurMaximale) => {
+    console.log( (valeurActuelle / valeurMaximale) * 100);
+    return Math.round((valeurActuelle / valeurMaximale) * 100);
+  }
+
+const appelDescription = () => {
+  showDescription.value = !showDescription.value
+  console.log("appelDescription", showDescription.value);
+}
 
 const appelPokemon = async (slug) => {
   const query = gql`
@@ -105,6 +116,7 @@ const appelPokemon = async (slug) => {
   });
   console.log(data.value);
   detailPokemon.value = data.value.pokemon;
+  showDescription.value = false;
 
 }
 
@@ -169,12 +181,12 @@ const selectType = (type) => {
   </div>
 
 
-  <div class="grid grid-cols-2 w-5/6 mx-auto gap-8">
+  <div :class="{ 'grid w-5/6 mx-auto gap-8': true, 'grid-cols-2': detailPokemon, 'grid-cols-1': !detailPokemon }">
 
     <div>
-      <ul v-if="pokemonList.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <ul v-if="pokemonList.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <li v-for="pokemon in pokemonList" :key="pokemon.id">
-          <button class="px-2 pt-2" :style="`background-color:${pokemon.typeDePokemon.couleur.hex}`" @click="appelPokemon(pokemon.slug)">
+          <button class="px-2 pt-2 rounded-lg" :style="`background-color:${pokemon.typeDePokemon.couleur.hex}`" @click="appelPokemon(pokemon.slug)">
             <NuxtImg :src="pokemon.image.url" :alt="pokemon.nom" />
             <h2 class="text-xl text-left pl-1">{{ pokemon.nom }}</h2>
             <div class="flex justify-start p-1"><p class=" text-base border border-red-500 rounded-lg p-1 " >{{ pokemon.typeDePokemon.nom }}</p></div>
@@ -195,8 +207,8 @@ const selectType = (type) => {
 
 
 
-    <div class="bg-white w-full">
-      <div v-if="detailPokemon" class="max-w-lg space-y-8 mx-auto">
+    <div v-if="detailPokemon" class="bg-white w-full">
+      <div class="max-w-lg space-y-8 mx-auto">
         <NuxtImg class="" :src="detailPokemon.image.url" :alt="detailPokemon.nom" />
         <h2 class="text-5xl text-left">{{ detailPokemon.nom }}</h2>
 
@@ -233,6 +245,27 @@ const selectType = (type) => {
         </div>
 
 
+        <h3 class="flex justify-center text-2xl">Attaques</h3>
+
+        <template v-for="attaque in detailPokemon.attaques" :key="attaque.nom">
+
+            <p class="text-justify text-red-950">Attaques: {{ attaque.nom }}</p>
+            <NuxtImg class="h-20 w-20 rounded-full" @click="appelDescription()" :src="attaque.image.url" :alt="attaque.nom" />
+            <div v-if="showDescription">
+            <p class="text-justify text-red-950">description: {{ attaque.description }}</p>
+            <p class="text-justify text-red-950">Degâts: {{ attaque.degats }}</p>
+            <div class="mb-5 h-1 bg-gray-200">
+              <div class="h-1 bg-purple-500" :style="`width:${calculerPourcentage(attaque.degats, 300)}`"></div>
+            </div>
+            <p class="text-justify text-red-950">Type de l'attaque: {{ attaque.typeDePokemon.nom }}</p>
+           
+            <NuxtImg class="" :src="attaque.typeDePokemon.image.url" :alt="attaque.typeDePokemon.nom" />
+            
+          </div>
+
+        </template>
+
+
 
         <h3 class="flex justify-center text-2xl">statistiques de base</h3>
 
@@ -253,15 +286,7 @@ const selectType = (type) => {
             <p class="text-justify text-red-950"></p>
           </div>
         </template>
-        <template v-for="attaque in detailPokemon.attaques" :key="attaque.nom">
-
-          <p class="text-justify text-red-950">Attaques: {{ attaque.nom }}</p>
-          <NuxtImg class="" :src="attaque.image.url" :alt="attaque.nom" />
-          <p class="text-justify text-red-950">description: {{ attaque.description }}</p>
-          <p class="text-justify text-red-950">Degâts: {{ attaque.degats }}</p>
-          <p class="text-justify text-red-950">Type de l'attaque: {{ attaque.typeDePokemon.nom }}</p>
-          <NuxtImg class="" :src="attaque.typeDePokemon.image.url" :alt="attaque.typeDePokemon.nom" />
-        </template>
+        
 
       </div>
     </div>
