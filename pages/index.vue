@@ -41,17 +41,17 @@ console.log(data.value);
 pokemons.value = data.value.pokemons;
 typesDePokemon.value = data.value.typesDePokemon
 const detailPokemon = ref();
-const showDescription =ref();
-showDescription.value = false;
+const showDescription ={};
 
 const calculerPourcentage = (valeurActuelle, valeurMaximale) => {
     console.log( (valeurActuelle / valeurMaximale) * 100);
     return ((valeurActuelle / valeurMaximale) * 100);
   }
 
-const appelDescription = () => {
-  showDescription.value = !showDescription.value
-  console.log("appelDescription", showDescription.value);
+const appelDescription = (nom) => {
+  showDescription = {};
+  showDescription[nom] = true
+  console.log("appelDescription", showDescription);
 }
 
 const appelPokemon = async (slug) => {
@@ -116,7 +116,7 @@ const appelPokemon = async (slug) => {
   });
   console.log(data.value);
   detailPokemon.value = data.value.pokemon;
-  showDescription.value = false;
+  
 
 }
 
@@ -208,70 +208,98 @@ const selectType = (type) => {
 
 
     <div v-if="detailPokemon" class="bg-white w-full">
-      <div class="max-w-lg space-y-8 mx-auto">
-        <NuxtImg class="" :src="detailPokemon.image.url" :alt="detailPokemon.nom" />
-        <h2 class="text-5xl text-left">{{ detailPokemon.nom }}</h2>
-
-        <div class="flex items-center">
-          <div class="flex justify-left p-2"><p class=" text-white text-lg border border rounded-lg p-2" :style="`background-color:${detailPokemon.typeDePokemon.couleur.hex}`">{{ detailPokemon.typeDePokemon.nom }}</p></div>
-
-          <div v-if="detailPokemon.typeDePokemon">
-            <NuxtImg class="h-12 w-12 rounded-full" :src="detailPokemon.typeDePokemon.image.url" :alt="detailPokemon.typeDePokemon.nom" />
-          </div>
-
-        </div>
-
-        <p class="text-justify text-red-950">{{ detailPokemon.description }}</p>
-
-        <div class="flex flex-col md:flex-row justify-around">
-
-          <div class="text-center">
-            <p class="text-sm pb-1">Hauteur</p>
-            <p class="flex justify-center text-justify text-red-950 text-xl border w-36 rounded-full p-1">{{ detailPokemon.height }} m</p>     
-          </div>
-
-          <div class="flex-col text-center">
-            <p class="text-sm pb-1">Poids</p>
-            <p class="flex justify-center text-justify text-red-950 text-xl border w-36 rounded-full p-1">{{ detailPokemon.mass }} kg</p>
-          </div>
-          
-          <div class="flex-col text-center">
-            <p class="text-sm pb-1">Couleur</p>
-            <div class="flex justify-center text-justify text-red-950 text-xl border w-36 rounded-full p-1" :style="`background-color:${detailPokemon.color.hex}`">
-            <p class="text-justify text-red-950">{{ detailPokemon.color.hex }}</p>
+      <div class="max-w-lg mx-auto">
+        
+        <div class="flex flex-col w-1/2 items-end mt-3">
+            <div>
+              <span>{{ detailPokemon.pointDeVie }} PV</span>
+              <div class="h-1 bg-gray-200 mt-1" style="width: 100px;">
+                <div class="h-1 bg-purple-500" :style="`width:${calculerPourcentage(detailPokemon.pointDeVie, 300)}%`"></div>
+              </div>
             </div>
           </div>
 
+
+        <div class="flex mt-2">
+          <div class="flex flex-col w-1/2">
+            <NuxtImg class="w-full " :src="detailPokemon.image.url" :alt="detailPokemon.nom" />
+          </div>
+          <div class="flex flex-col items-start space-x-2 ml-2 mr-2">
+
+            <div v-if="detailPokemon.typeDePokemon" class="flex space-x-2"> 
+              <NuxtImg class="h-12 w-12 rounded-full" :src="detailPokemon.typeDePokemon.image.url" :alt="detailPokemon.typeDePokemon.nom" />
+              <p class=" text-white text-lg border border rounded-lg p-2" :style="`background-color:${detailPokemon.typeDePokemon.couleur.hex}`">{{ detailPokemon.typeDePokemon.nom }}</p>   
+            </div>
+           
+
+              <div class="flex items-center">
+                <p class="text-sm pb-1">Hauteur</p>
+                <p class="flex justify-center text-justify text-red-950 text-xl border w-36 rounded-full p-1">{{ detailPokemon.height }} m</p>     
+              </div>
+
+              <div class="flex items-center">
+                <p class="text-sm pb-1">Poids</p>
+                <p class="flex justify-center text-justify text-red-950 text-xl border w-36 rounded-full p-1">{{ detailPokemon.mass }} kg</p>
+              </div>
+
+              <div class="flex items-center">
+                <p class="text-sm pb-1">Couleur</p>
+                <div class="flex justify-center text-justify text-red-950 text-xl border w-36 rounded-full p-1" :style="`background-color:${detailPokemon.color.hex}`">
+                <p class="text-justify text-red-950">{{ detailPokemon.color.hex }}</p>
+                </div>
+              </div>
+
+
+
+          </div>
         </div>
+
+
+
+
+
+        <h2 class="text-5xl text-left">{{ detailPokemon.nom }}</h2>
+
+        
+
+        <p class="text-justify text-red-950">{{ detailPokemon.description }}</p>
+
+       
 
 
         <h3 class="flex justify-center text-2xl">Attaques</h3>
 
-        <template v-for="attaque in detailPokemon.attaques" :key="attaque.nom">
+        <div class="flex flex-wrap gap-4">
 
-            <p class="text-justify text-red-950">Attaques: {{ attaque.nom }}</p>
-            <NuxtImg class="h-20 w-20 rounded-full" @click="appelDescription()" :src="attaque.image.url" :alt="attaque.nom" />
-            <div v-if="showDescription">
-            <p class="text-justify text-red-950">description: {{ attaque.description }}</p>
-            <p class="text-justify text-red-950">Degâts: {{ attaque.degats }}</p>
-            <div class="mb-5 h-1 bg-gray-200">
-              <div class="h-1 bg-purple-500" :style="`width:${calculerPourcentage(attaque.degats, 300)}%`"></div>
-            </div>
-            <p class="text-justify text-red-950">Type de l'attaque: {{ attaque.typeDePokemon.nom }}</p>
-           
-            <NuxtImg class="" :src="attaque.typeDePokemon.image.url" :alt="attaque.typeDePokemon.nom" />
+          <template v-for="attaque in detailPokemon.attaques" :key="attaque.nom">
+
+              
+              <NuxtImg class="h-20 w-20 rounded-full" @click="appelDescription(attaque.nom)" :src="attaque.image.url" :alt="attaque.nom" />
+              
+              <div v-if="showDescription[attaque.nom]">
+              <p class="text-justify text-red-950">Attaques: {{ attaque.nom }}</p>
+              <p class="text-justify text-red-950">description: {{ attaque.description }}</p>
+              <p class="text-justify text-red-950">Degâts: {{ attaque.degats }}</p>
+              <div class="mb-5 h-1 bg-gray-200">
+                <div class="h-1 bg-purple-500" :style="`width:${calculerPourcentage(attaque.degats, 300)}%`"></div>
+              </div>
+              <p class="text-justify text-red-950">Type de l'attaque: {{ attaque.typeDePokemon.nom }}</p>
             
-          </div>
+              <NuxtImg class="" :src="attaque.typeDePokemon.image.url" :alt="attaque.typeDePokemon.nom" />
+              
+            </div>
 
-        </template>
+          </template>
+
+        </div>
 
 
 
         <h3 class="flex justify-center text-2xl">statistiques de base</h3>
 
-
-        <p class="text-justify text-red-950">PV: {{ detailPokemon.pointDeVie }}</p>
-        
+        <div class="mb-5 h-1 bg-gray-200">
+          <p class="h-1 bg-purple-500" :style="`width:${calculerPourcentage(detailPokemon.pointDeVie, 300)}%`" >PV: {{ detailPokemon.pointDeVie }}</p>
+        </div>
        
         
         <div class="w-16" :style="`background-color:${detailPokemon.color.hex}`">
