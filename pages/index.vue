@@ -151,9 +151,10 @@ const selectType = (type) => {
     <label for="simple-search" class="sr-only">Search</label>
     <div class="relative w-2/5 mx-auto">
       <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+        <!-- <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5v10M3 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm12 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 0V6a3 3 0 0 0-3-3H9m1.5-2-2 2 2 2"/>
-            </svg>
+            </svg> -->
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="mdi-pokeball" width="24" height="24" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4C7.92,4 4.55,7.05 4.06,11H8.13C8.57,9.27 10.14,8 12,8C13.86,8 15.43,9.27 15.87,11H19.94C19.45,7.05 16.08,4 12,4M12,20C16.08,20 19.45,16.95 19.94,13H15.87C15.43,14.73 13.86,16 12,16C10.14,16 8.57,14.73 8.13,13H4.06C4.55,16.95 7.92,20 12,20M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10Z" /></svg>
       </div>
       <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" v-model="search" @input="filterPokemons" placeholder="Cherchez un pokémon"/>
     </div>
@@ -217,25 +218,25 @@ const selectType = (type) => {
           <div class="flex flex-col w-1/2">
             <NuxtImg class="w-full " :src="detailPokemon.image.url" :alt="detailPokemon.nom" />
           </div>
-          <div class="flex flex-col items-start space-x-2 ml-2 mr-2">
+          <div class="flex flex-col items-start space-x-2 ml-2 mr-2 w-1/2">
 
-            <div v-if="detailPokemon.typeDePokemon" class="flex space-x-2">
+            <div v-if="detailPokemon.typeDePokemon" class="flex space-x-2 w-full mb-5">
               <NuxtImg class="h-12 w-12 rounded-full" :src="detailPokemon.typeDePokemon.image.url" :alt="detailPokemon.typeDePokemon.nom" />
               <p class=" text-white text-lg border border rounded-lg p-2" :style="`background-color:${detailPokemon.typeDePokemon.couleur.hex}`">{{ detailPokemon.typeDePokemon.nom }}</p>
             </div>
 
 
-              <div class="flex items-center">
+              <div class="flex items-center justify-between w-full mb-2">
                 <p class="text-sm pb-1">Hauteur</p>
                 <p class="flex justify-center text-justify text-red-950 text-xl border w-36 rounded-full p-1">{{ detailPokemon.height }} m</p>
               </div>
 
-              <div class="flex items-center">
+              <div class="flex items-center justify-between w-full mb-2">
                 <p class="text-sm pb-1">Poids</p>
                 <p class="flex justify-center text-justify text-red-950 text-xl border w-36 rounded-full p-1">{{ detailPokemon.mass }} kg</p>
               </div>
 
-              <div class="flex items-center">
+              <div class="flex items-center justify-between w-full mb-2">
                 <p class="text-sm pb-1">Couleur</p>
                 <div class="flex justify-center text-justify text-red-950 text-xl border w-36 rounded-full p-1" :style="`background-color:${detailPokemon.color.hex}`">
                 <p class="text-justify text-red-950">{{ detailPokemon.color.hex }}</p>
