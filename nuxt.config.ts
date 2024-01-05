@@ -4,7 +4,7 @@ export default defineNuxtConfig({
     transpile: ["tslib"],
   },
   devtools: { enabled: true },
-  modules: ["@nuxtjs/apollo", "@nuxtjs/tailwindcss", "@nuxt/image"],
+  modules: ["@nuxtjs/apollo", "@nuxtjs/tailwindcss", "@nuxt/image", "@nuxtjs/google-fonts"],
   apollo: {
     clients: {
       default: {
@@ -13,7 +13,20 @@ export default defineNuxtConfig({
     },
   },
   tailwindcss: {
-    config: {
+    config:  { 
+      theme: {
+      extend: {
+        fontFamily: {
+          'luckiestguy': ['"Luckiest Guy"', 'cursive'],
+        },
+      },
+    },
+    },
+  },
+  googleFonts: {
+    display: 'swap',
+    families: {
+      'Luckiest+Guy': true,
     },
   },
 });

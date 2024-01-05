@@ -32,9 +32,10 @@
     </Head>
   
     <div class="min-h-screen bg-red-500">
-      <nav class="container mx-auto px-3 h-24 flex items-center mb-10">
+      <nav class="container mx-auto px-3 h-24 flex items-center justify-center pb-10 pt-[80px]">
+
         <NuxtLink to="/">
-          <h1 class="text-5xl font-serif">Pokedex</h1>
+            <h1 class="text-5xl font-luckiestguy">Pokedex</h1>
         </NuxtLink>
       </nav>
       <div class="container mx-auto px-3">
