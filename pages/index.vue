@@ -1,4 +1,6 @@
 <script setup>
+// Requête GraphQL qui récupère les informations demandées sur mes pokémons (liste de pokémons).
+
 const query = gql`
   query Pokemons {
     pokemons(orderBy: id_ASC, first: 25) {
@@ -34,19 +36,33 @@ const query = gql`
 
 `;
 
-const pokemons = ref();
-const typesDePokemon = ref();
-const { data } = await useAsyncQuery(query);
+
+const pokemons = ref(); // la variable pokemons est utilisée pour stocker la liste des Pokémon récupérée à partir de la requête GraphQL.
+
+const typesDePokemon = ref(); // Elle est destinée à stocker les différents types de Pokémon récupérés à partir de la requête GraphQL.
+
+const { data } = await useAsyncQuery(query); // Elle exécute une requête GraphQL de manière asynchrone en utilisant useAsyncQuery, elle attend sa réponse et extrait les données de cette réponse dans la variable data. 
+
 console.log(data.value);
-pokemons.value = data.value.pokemons;
-typesDePokemon.value = data.value.typesDePokemon
-const detailPokemon = ref();
-const selectedAttaque = ref();
+
+pokemons.value = data.value.pokemons; // met à jour la valeur stockée dans la référence réactive ref() pokemons avec les données des Pokémons obtenues à partir de la requête GraphQL => Data.value.pokemons. Value permet d'accéder à la valeur réelle stockée à l'intérieur de la référence réactive ref()
+
+
+typesDePokemon.value = data.value.typesDePokemon // Effectue la même chose que la ligne précédente mais pour la variable TypesDePokemon
+const detailPokemon = ref(); // cette référence detailPokemon est utilisée pour afficher les détails du Pokémon sélectionné
+const selectedAttaque = ref(); // Cette référence selectedAttaque est mise à jour lorsqu'on clique sur une attaque spécifique d'un Pokémon. Elle est utilisée pour afficher les détails de l'attaque 
+
+
+// Cette fonction prend deux paramètres : valeurActuelle et valeurMaximale. Elle calcule le pourcentage représenté par la valeurActuelle par rapport à la valeurMaximale. elle est utilisée pour calculer et afficher visuellement le pourcentage des points de vie actuels d'un Pokémon par rapport à leur valeur maximale qui fixé à 300. Elle est aussi utilisé pour afficher la barre de progression des dégâts d'une attaque par rapport à une valeur maximale de 300 (défini plus bas)
 
 const calculerPourcentage = (valeurActuelle, valeurMaximale) => {
     console.log( (valeurActuelle / valeurMaximale) * 100);
     return ((valeurActuelle / valeurMaximale) * 100);
   }
+
+
+
+// Création de la requête => Execution de la requête => récupérations des données => Affichage des données récupérees. Ces données mises à jour permettent d'afficher les détails d'un pokémon lorsqu'il est sélectionné.
 
 const appelPokemon = async (slug) => {
   const query = gql`
@@ -114,16 +130,21 @@ const appelPokemon = async (slug) => {
 }
 
 
+
+//  exécute une requête GraphQL pour récupérer les données des Pokémons, et ensuite, à mettre à jour la liste des Pokémons avec ces données obtenues.
+
 const { data: pokemonData } = await useAsyncQuery(query);
 pokemons.value = pokemonData.value.pokemons;
 
-const search = ref('');
+const search = ref(''); // création d'une variable search qui initialise cette variable à une chaine vide. Elle permet de gérer la recherche de Pokémons.
 
-const selectedType = ref("all");
+const selectedType = ref("all"); // crée une variable nommée selectedType et l'initialise avec la valeur "all" en utilisant ref() Ce qui permet d'afficher tous les types de pokémon sans filtre par type spécifique.
+
+
 
 const pokemonList = ref(pokemons.value);
 
-
+// cette fonction filterPokemons met à jour la liste des Pokémon (pokemonList.value) en fonction des critères de recherche (search) et du type sélectionné (selectedType)
 
 const filterPokemons = () => {
   console.log(pokemonList.value);
@@ -139,6 +160,8 @@ const filterPokemons = () => {
   });
 }
 
+// selectType est une fonction qui met à jour le type sélectionné et déclenche ensuite le processus de filtrage des Pokémon pour afficher ceux qui correspondent au type choisi par l'utilisateur.
+
 const selectType = (type) => {
   selectedType.value = type;
   filterPokemons()
@@ -151,9 +174,6 @@ const selectType = (type) => {
     <label for="simple-search" class="sr-only">Search</label>
     <div class="relative w-2/5 mx-auto">
       <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-        <!-- <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5v10M3 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm12 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 0V6a3 3 0 0 0-3-3H9m1.5-2-2 2 2 2"/>
-            </svg> -->
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="mdi-pokeball" width="24" height="24" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4C7.92,4 4.55,7.05 4.06,11H8.13C8.57,9.27 10.14,8 12,8C13.86,8 15.43,9.27 15.87,11H19.94C19.45,7.05 16.08,4 12,4M12,20C16.08,20 19.45,16.95 19.94,13H15.87C15.43,14.73 13.86,16 12,16C10.14,16 8.57,14.73 8.13,13H4.06C4.55,16.95 7.92,20 12,20M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10Z" /></svg>
       </div>
       <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" v-model="search" @input="filterPokemons" placeholder="Cherchez un pokémon"/>
@@ -283,43 +303,11 @@ const selectType = (type) => {
                 <div class="h-1 bg-purple-500" :style="`width:${calculerPourcentage(selectedAttaque.degats, 300)}%`"></div>
               </div>
               
-              <!-- <NuxtImg class="" :src="selectedAttaque.typeDePokemon.image.url" :alt="selectedAttaque.typeDePokemon.nom" /> -->
           </div>
 
         </div>
 
-
-
-        <!-- <h3 class="flex justify-center text-2xl">statistiques de base</h3> -->
-
-        <!-- <div class="mb-5 h-1 bg-gray-200">
-          <p class="h-1 bg-purple-500" :style="`width:${calculerPourcentage(detailPokemon.pointDeVie, 300)}%`" >PV: {{ detailPokemon.pointDeVie }}</p>
-        </div> -->
-
-
-        <!-- <div class="w-16" :style="`background-color:${detailPokemon.color.hex}`">
-          <p class="text-justify text-red-950">{{ detailPokemon.color.hex }}</p>
-        </div> -->
-
-
-        <!-- <template v-if="detailPokemon.typeDePokemon">
-          <p class="text-justify text-red-950">Type de Pokemon: {{ detailPokemon?.typeDePokemon?.nom }}</p>
-          <NuxtImg class="" :src="detailPokemon.typeDePokemon.image.url" :alt="detailPokemon.typeDePokemon.nom" />
-          <div class="w-16 h-16 rounded-full" :style="`background-color:${detailPokemon.typeDePokemon.couleur.hex}`">
-            <p class="text-justify text-red-950"></p>
-          </div>
-        </template> -->
-
       </div>
     </div>
   </div>
-
-  <!-- <div class="flex justify-center">
-    <div class="bg-black w-2/5">
-      <p class="text-white">p</p>
-    </div>
-    <div class="bg-white w-2/5">
-      <p>p</p>
-    </div>
-  </div> -->
 </template>
