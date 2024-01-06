@@ -163,7 +163,7 @@ const selectType = (type) => {
   <div class="w-full flex justify-center items-center flex-col">
     <div class="w-5/6 space-x-2 md:w-auto flex flex-wrap justify-center space-y-4 md:space-y-0 md:space-x-8 py-12">
       <button class="bg-red-400 rounded-lg overflow-hidden" :class="{ 'ring-4 ring-yellow-400': selectedType === 'all' }" @click="selectType('all')">
-      <NuxtImg src="/all.jpg" alt="all" class="h-16 w-16 object-cover" />
+      <NuxtImg src="/allTypes.jpg" alt="all" class="h-16 w-16 object-cover" />
               <h4 class="text-md text-center">Tous</h4>
       </button>
 
